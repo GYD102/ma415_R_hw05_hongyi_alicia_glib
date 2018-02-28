@@ -11,7 +11,10 @@ Here I'm adding stuff from a different branch!
 
 Section 3
 ---------
+
+.
 ... to the same line from different branches!
+.
 Section 4
 ---------
 
