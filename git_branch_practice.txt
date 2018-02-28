@@ -1,6 +1,9 @@
 Section 1
 ---------
 
+This is the first test! I added a couple of newlines. I am also writing this
+text! Let's see how it goes! ^o^
+
 Section 2
 ---------
 
