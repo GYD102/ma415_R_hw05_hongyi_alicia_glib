@@ -7,6 +7,8 @@ text! Let's see how it goes! ^o^
 Section 2
 ---------
 
+Here I'm adding stuff from a different branch!
+
 Section 3
 ---------
 
