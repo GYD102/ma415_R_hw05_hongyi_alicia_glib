@@ -12,6 +12,8 @@ Here I'm adding stuff from a different branch!
 Section 3
 ---------
 Now I'm going to make edits ...
+... to the same line from different branches!
+
 Section 4
 ---------
 
