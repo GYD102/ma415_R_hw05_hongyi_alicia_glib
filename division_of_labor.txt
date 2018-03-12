@@ -1,0 +1,5 @@
+Homie - Part 1
+
+Alicia - Part 2: visualization
+
+Glib - Part 2: data cleanup, organization, suggestions for visualization
