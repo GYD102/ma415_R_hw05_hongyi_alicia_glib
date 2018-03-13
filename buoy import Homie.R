@@ -136,3 +136,56 @@ b <- data.frame(Time=c(time(a)),Atmp=c(a))
 p <- ggplot(b,aes(x=Time,y=Atmp))
 p + geom_line(colour = 'Blue') + xlab('The Time Series of Date') + ylab('ATMP')
 
+#################data by hour
+
+clean_atmp_hourly <- function(i){
+  a <- i %>% select(YYYY,MM,DD,hh,ATMP)
+  return(a)
+}
+
+clean_wtmp_hourly <- function(i){
+  b <- i %>% select(YYYY,MM,DD,hh,WTMP)
+  return(b)
+}
+
+get_atmp_mess_hourly <- function(i){
+  a <- get_MR(get_url(i),get_filenames(i))
+  b <- clean_atmp_hourly(a)%>% select(ATMP)
+  b[b>50] <- NA
+  b
+}
+
+for (i in c(1987:2009)){
+  if(i == 1987){
+    hdata1987_2009 <- get_atmp_mess_hourly(i)
+  }else{
+    hdata1987_2009 <- rbind(hdata1987_2009, get_atmp_mess_hourly(i))
+  }
+}
+
+hdata2010 <- get_atmp_mess_hourly(2010)
+
+hdata2011 <- get_atmp_mess_hourly(2011)
+
+hdata2012 <- get_atmp_mess_hourly(2012)
+
+hdata2013 <- hdata2012
+
+hdata2010_2013 <- rbind(hdata2010,hdata2011,hdata2012,hdata2013)
+
+for (i in c(2014:2017)){
+  if(i == 2014){
+    hdata2014_2017 <- get_atmp_mess_hourly(i)
+  }else{
+    hdata2014_2017 <- rbind(hdata2014_2017, get_atmp_mess_hourly(i))
+  }
+}
+
+hdata_total <- rbind(hdata1987_2009,hdata2010_2013,hdata2014_2017)
+
+ha <- ts(hdata_total, start = c(1987,1,1,1), frequency=8760)
+hb <- data.frame(Time=c(time(ha)),Atmp=c(ha))
+hp <- ggplot(hb,aes(x=Time,y=Atmp))
+hp + geom_line(colour = 'Blue') + xlab('The Time Series of Date') + ylab('ATMP')
+
+View(hdata_total)
