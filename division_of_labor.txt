@@ -5,3 +5,5 @@ Alicia - Part 2: visualization
 Glib - Part 2: data cleanup, organization, suggestions for visualization
 
 Gilb Conld you post the scripts for cleaning up the mass data so that i can take a look and continue the visulaization? thank you 
+
+Homie: I have posted the finished timeseries script, I would post shiny and test after I finish, maybe tomorrow, if there is anything unclear, please let me know.
