@@ -18,6 +18,9 @@ data_avg <- as.tibble(data_avg)
 data_veg <- read.csv("veg_data3.csv")
 data_veg <- as.tibble(data_veg)
 data_veg <- data_veg %>% filter(label == "RESTRICTED USE CHEMICAL", Unit.of.Measurement==" MEASURED IN LB")
+tox <- read_csv("chemical_tox_shiny.csv")
+tox <- tox %>% select(-1)
+
 
 
 # Define UI for application that draws a histogram
@@ -81,14 +84,25 @@ ui <- dashboardPage(
                   selectInput("a", "Choose a commodity:",choices = c(2006,2010,2014,2016)),
                   selectInput("b", "Choose a commodity:",choices = c("BROCCOLI","CAULIFLOWER"))
                ),
-                box(
-                  title = "Chemcials of vegetable compared with their toxicity",
-                  status= "success",
-                  solidHeader = TRUE,
-                  plotOutput("graph4"),              
-                  hr(),
-                  helpText("Data from EPA"),
-                  verbatimTextOutput("dateText")
+               tabBox(
+                 
+                 
+                  tabPanel("Chemcials of vegetable",
+                           status = "success",
+                           solidHeader = TRUE,
+                           plotOutput("graph4"),              
+                           hr(),
+                           helpText("Data from EPA"),
+                           verbatimTextOutput("dateText")
+                  ),
+                  
+                  tabPanel("Toxicity of Chemcials",
+                           status = "success",
+                           solidHeader = TRUE,
+                           plotOutput("graph5"),
+                           hr(),
+                           helpText("Data from EPA")
+                           )
                  )
               )
             )
@@ -160,6 +174,15 @@ server <- function(input, output) {
       geom_bar(stat="identity", position="dodge",aes(fill=Name)) + 
       coord_flip()+
       labs(y = "Values(LB) ",x = "Chemical Name")
+  })
+  
+  output$graph5 <- renderPlot({
+    data <- as.data.frame(tox1)
+    rownames(data) <- data[,1]
+    ggplot(data,mapping=aes(x = Name, y=`Values for LD50 on rats`))+
+      geom_bar(stat="identity", position="dodge",aes(fill=Name))+
+      coord_flip()+
+      labs(y = "Values(mg/kg)",x = "Chemical Name")
   })
   
 }
