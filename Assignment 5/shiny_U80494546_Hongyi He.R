@@ -20,8 +20,8 @@ data_veg <- as.tibble(data_veg)
 data_veg <- data_veg %>% filter(label == "RESTRICTED USE CHEMICAL", Unit.of.Measurement==" MEASURED IN LB")
 tox <- read_csv("chemical_tox_shiny.csv")
 tox <- tox %>% select(-1)
-
-
+broc <- read_csv("broc.csv")
+Caul <- read_csv("Caul.csv")
 
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
@@ -85,8 +85,6 @@ ui <- dashboardPage(
                   selectInput("b", "Choose a commodity:",choices = c("BROCCOLI","CAULIFLOWER"))
                ),
                tabBox(
-                 
-                 
                   tabPanel("Chemcials of vegetable",
                            status = "success",
                            solidHeader = TRUE,
@@ -102,7 +100,15 @@ ui <- dashboardPage(
                            plotOutput("graph5"),
                            hr(),
                            helpText("Data from EPA")
-                           )
+                  ),
+                  
+                  tabPanel("Chemicals content of vegtable compared to their toxicity",
+                           status = "warning",
+                           solidHeader = TRUE,
+                           plotOutput("graph6"),
+                           hr(),
+                           helpText("Data from EPA")
+                          )
                  )
               )
             )
@@ -126,6 +132,14 @@ server <- function(input, output) {
   
   d <- reactive({
     filter(data_veg, Year==input$a) %>% filter(Commodity == input$b)
+  })
+  
+  e <- reactive({
+    if(input$b=="CAULIFLOWER"){
+      filter(Caul, Year==input$a)
+    }else{
+      filter(broc, Year==input$a)
+    }
   })
   
   output$graph <- renderPlot({
@@ -177,12 +191,20 @@ server <- function(input, output) {
   })
   
   output$graph5 <- renderPlot({
-    data <- as.data.frame(tox1)
+    data <- as.data.frame(tox)
     rownames(data) <- data[,1]
     ggplot(data,mapping=aes(x = Name, y=`Values for LD50 on rats`))+
       geom_bar(stat="identity", position="dodge",aes(fill=Name))+
       coord_flip()+
       labs(y = "Values(mg/kg)",x = "Chemical Name")
+  })
+  
+  output$graph6 <- renderPlot({
+    ggplot(e(), aes(x= Name, y=value )) + 
+      geom_bar(stat="identity",position = "dodge",aes(fill=Toxicity)) + 
+      labs(y = "Values(LB) ",x = "Chemical Name") +
+      coord_flip()+
+      labs(title=paste("LD50(mg/kg) and Real content(lb) of",input$b))
   })
   
 }
